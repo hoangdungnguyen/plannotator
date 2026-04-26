@@ -2,7 +2,74 @@
   <img src="apps/marketing/public/og-image.webp" alt="Plannotator" width="80%" />
 </p>
 
-# Plannotator
+# Plannotator (Custom Fork)
+
+> A customized version of [backnotprop/plannotator](https://github.com/backnotprop/plannotator) with **LaTeX math support** via KaTeX.
+
+---
+
+## What's Different from the Original?
+
+| Feature | Status |
+|---------|--------|
+| **LaTeX Math Rendering** | ✅ Added — `$E = mc^2$` and `$$\int_0^1 x dx$$` render in plan editor and annotate mode |
+
+This fork adds **KaTeX-based math rendering** to the plan editor. When you annotate markdown files containing LaTeX expressions, they render beautifully instead of showing raw text.
+
+### Syntax Examples
+
+**Inline math:**
+```
+The famous equation $E = mc^2$ changed physics.
+```
+
+**Block math:**
+```
+$$\int_0^1 x \, dx = \frac{1}{2}$$
+```
+
+---
+
+## Install This Custom Fork
+
+```bash
+# Clone
+git clone https://github.com/hoangdungnguyen/plannotator.git
+cd plannotator
+
+# Install dependencies
+bun install
+
+# Build
+bun run build:hook
+bun build apps/hook/server/index.ts --compile --outfile ~/.local/bin/plannotator
+```
+
+### For Claude Code
+
+```
+/plugin marketplace add hoangdungnguyen/plannotator
+```
+
+### For OpenCode
+
+Add to `opencode.json`:
+
+```json
+{
+  "plugin": ["https://github.com/hoangdungnguyen/plannotator#HEAD"]
+}
+```
+
+---
+
+## Install Official Version
+
+See the [official installation guide](#install-for-claude-code) below, or visit [plannotator.ai](https://plannotator.ai).
+
+---
+
+## Original README
 
 Interactive Plan & Code Review for AI Coding Agents. Mark up and refine your plans or code diffs using a visual UI, share for team collaboration, and seamlessly integrate with **Claude Code**, **Copilot CLI**, **Gemini CLI**, **OpenCode**, **Pi**, and **Codex**.
 
@@ -67,15 +134,44 @@ Plannotator lets you privately share plans, annotations, and feedback with colle
 
 ## Install for Claude Code
 
-**Install the `plannotator` command:**
+### Install from this customized fork (with LaTeX math support)
+
+This fork adds **KaTeX-based LaTeX math rendering** — math expressions like `$E = mc^2$` and `$$\int_0^1 x dx$$` render beautifully in the plan editor and annotate mode.
 
 **macOS / Linux / WSL:**
 
 ```bash
-curl -fsSL https://plannotator.ai/install.sh | bash
+git clone https://github.com/hoangdungnguyen/plannotator.git
+cd plannotator
+bun install
+bun run build:hook && bun build apps/hook/server/index.ts --compile --outfile ~/.local/bin/plannotator
 ```
 
 **Windows PowerShell:**
+
+```powershell
+git clone https://github.com/hoangdungnguyen/plannotator.git
+cd plannotator
+bun install
+bun run build:hook
+bun build apps/hook/server/index.ts --compile --outfile "$env:LOCALAPPDATA\plannotator\plannotator.exe"
+```
+
+**Then in Claude Code:**
+
+```
+/plugin marketplace add hoangdungnguyen/plannotator
+```
+
+Restart Claude Code after plugin install.
+
+---
+
+### Install from official upstream
+
+```bash
+curl -fsSL https://plannotator.ai/install.sh | bash
+```
 
 ```powershell
 irm https://plannotator.ai/install.ps1 | iex
@@ -86,8 +182,6 @@ irm https://plannotator.ai/install.ps1 | iex
 ```
 /plugin marketplace add backnotprop/plannotator
 ```
-
-Restart Claude Code after plugin install.
 
 <details>
 <summary>Pin a specific version or verify provenance</summary>
@@ -267,3 +361,9 @@ at your option.
 Unless you explicitly state otherwise, any contribution intentionally submitted
 for inclusion in this project by you, as defined in the Apache-2.0 license,
 shall be dual licensed as above, without any additional terms or conditions.
+
+---
+
+## Acknowledgments
+
+This is a customized fork of [backnotprop/plannotator](https://github.com/backnotprop/plannotator). The base project is by **backnotprop** and licensed under Apache-2.0 / MIT.

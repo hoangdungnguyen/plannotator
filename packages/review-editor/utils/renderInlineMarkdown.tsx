@@ -1,8 +1,9 @@
 import React from 'react';
+import { renderInlineMath, renderBlockMath, extractMath } from './renderMath';
 
 /**
- * Renders simple inline markdown: `code`, **bold**, *italic*, _italic_, and
- * fenced code blocks (```...```). Enough for review comments.
+ * Renders simple inline markdown: `code`, **bold**, *italic*, _italic_,
+ * fenced code blocks (```...```), and LaTeX math ($...$, $$...$$).
  */
 export function renderInlineMarkdown(text: string): React.ReactNode[] {
   const nodes: React.ReactNode[] = [];
@@ -23,10 +24,63 @@ export function renderInlineMarkdown(text: string): React.ReactNode[] {
         </pre>
       );
     } else {
-      // Process inline markdown
-      nodes.push(...renderInline(part, key));
+      // Process inline markdown with math support
+      nodes.push(...renderInlineWithMath(part, key));
       key++;
     }
+  }
+
+  return nodes;
+}
+
+/**
+ * Renders inline text with math support.
+ * Math delimiters are processed first, then inline markdown.
+ */
+function renderInlineWithMath(text: string, startKey: number): React.ReactNode[] {
+  const nodes: React.ReactNode[] = [];
+  let key = startKey;
+  let remaining = text;
+
+  while (remaining.length > 0) {
+    // Try to extract math first
+    const mathMatch = extractMath(remaining);
+
+    if (!mathMatch) {
+      // No more math, process rest as inline markdown
+      if (remaining.length > 0) {
+        nodes.push(...renderInline(remaining, key));
+        key += countNodes(renderInline(remaining, key));
+      }
+      break;
+    }
+
+    // Text before math
+    if (mathMatch.before.length > 0) {
+      nodes.push(...renderInline(mathMatch.before, key));
+      key += countNodes(renderInline(mathMatch.before, key));
+    }
+
+    // Math content
+    if (mathMatch.isBlock) {
+      nodes.push(
+        <div
+          key={key++}
+          className="math-block"
+          dangerouslySetInnerHTML={{ __html: renderBlockMath(mathMatch.math) }}
+        />
+      );
+    } else {
+      nodes.push(
+        <span
+          key={key++}
+          className="math-inline"
+          dangerouslySetInnerHTML={{ __html: renderInlineMath(mathMatch.math) }}
+        />
+      );
+    }
+
+    remaining = mathMatch.after;
   }
 
   return nodes;
@@ -82,4 +136,12 @@ function renderInline(text: string, startKey: number): React.ReactNode[] {
   }
 
   return nodes;
+}
+
+/**
+ * Counts the number of nodes produced by renderInline.
+ * Used to increment key properly when chaining renders.
+ */
+function countNodes(nodes: React.ReactNode[]): number {
+  return nodes.filter(n => typeof n === 'object' && n !== null).length;
 }

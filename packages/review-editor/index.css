@@ -1209,8 +1209,84 @@ diffs-container {
 
 
 
-/* --- Reduced motion: disable all tour animations --- */
+/* =====================================================
+   KaTeX Math Rendering
+   ===================================================== */
+
+/* KaTeX base styling */
+.katex {
+  font-size: 1.1em;
+}
+
+.katex-display {
+  margin: 0.75rem 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+/* Inline math */
+.math-inline {
+  display: inline;
+}
+
+/* Block math */
+.math-block {
+  display: block;
+  text-align: center;
+  margin: 0.75rem 0;
+  padding: 0.5rem 0;
+}
+
+/* Math error display */
+.math-error {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  padding: 0.1em 0.35em;
+  background: oklch(from var(--destructive) l c h / 0.1);
+  border-radius: 0.25rem;
+}
+
+/* AI markdown math integration */
+.ai-markdown .math-inline,
+.ai-markdown .math-block {
+  color: var(--foreground);
+}
+
+.ai-markdown .katex {
+  color: var(--foreground);
+}
+
+/* Review comment math styling */
+.review-comment-body .math-inline,
+.review-comment-body .math-block,
+.review-comment-markdown .math-inline,
+.review-comment-markdown .math-block {
+  color: var(--foreground);
+}
+
+.review-comment-body .katex,
+.review-comment-markdown .katex {
+  color: var(--foreground);
+}
+
+/* Light theme adjustments */
+.light .ai-markdown .math-inline,
+.light .ai-markdown .math-block,
+.light .review-comment-body .math-inline,
+.light .review-comment-body .math-block {
+  color: var(--foreground);
+}
+
+/* =====================================================
+   Reduced motion
+   ===================================================== */
+
 @media (prefers-reduced-motion: reduce) {
+  .katex-display {
+    animation: none;
+  }
+
+  /* Restore tour animations */
   .tour-dialog-overlay,
   .tour-dialog-overlay-closing,
   .tour-dialog-content,

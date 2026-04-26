@@ -1,6 +1,7 @@
 import React from "react";
 import { transformPlainText } from "../utils/inlineTransforms";
 import { getImageSrc } from "./ImageThumbnail";
+import { renderInlineMath, renderBlockMath, extractMath } from "../utils/renderMath";
 
 const DANGEROUS_PROTOCOL = /^\s*(javascript|data|vbscript|file)\s*:/i;
 function sanitizeLinkUrl(url: string): string | null {
@@ -102,6 +103,44 @@ export const InlineMarkdown: React.FC<{
       parts.push(match[1]);
       remaining = remaining.slice(2);
       previousChar = match[1];
+      continue;
+    }
+
+    // Math: $...$ inline or $$...$$ block (must check before other patterns)
+    const mathMatch = extractMath(remaining);
+    if (mathMatch) {
+      if (mathMatch.before.length > 0) {
+        parts.push(
+          <InlineMarkdown
+            key={key++}
+            text={mathMatch.before}
+            onOpenLinkedDoc={onOpenLinkedDoc}
+            onNavigateAnchor={onNavigateAnchor}
+            githubRepo={githubRepo}
+            imageBaseDir={imageBaseDir}
+            onImageClick={onImageClick}
+          />
+        );
+      }
+      if (mathMatch.isBlock) {
+        parts.push(
+          <div
+            key={key++}
+            className="math-block"
+            dangerouslySetInnerHTML={{ __html: renderBlockMath(mathMatch.math) }}
+          />
+        );
+      } else {
+        parts.push(
+          <span
+            key={key++}
+            className="math-inline"
+            dangerouslySetInnerHTML={{ __html: renderInlineMath(mathMatch.math) }}
+          />
+        );
+      }
+      remaining = mathMatch.after;
+      previousChar = mathMatch.after[mathMatch.after.length - 1] || previousChar;
       continue;
     }
 

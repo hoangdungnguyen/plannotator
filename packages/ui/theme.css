@@ -343,3 +343,23 @@ body:has([data-popout="true"]) .os-scrollbar {
 .directive-warning .directive-title { color: #f59e0b; }
 .directive-danger, .directive-caution { background: color-mix(in srgb, #ef4444 10%, transparent); border-color: color-mix(in srgb, #ef4444 40%, transparent); }
 .directive-danger .directive-title, .directive-caution .directive-title { color: #ef4444; }
+
+/* KaTeX math rendering */
+.katex { font-size: 1.1em; }
+.katex-display { margin: 1em 0; }
+.math-inline { display: inline-block; vertical-align: middle; }
+.math-block { display: block; margin: 1em 0; text-align: center; overflow-x: auto; }
+.math-error { font-family: var(--font-mono); font-size: 0.85em; }
+
+/* Theme-aware styling */
+@media (prefers-color-scheme: light) {
+  .ai-markdown .katex { color: var(--foreground); }
+}
+@media (prefers-color-scheme: dark) {
+  .ai-markdown .katex { color: var(--foreground); }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .katex { animation: none; }
+}

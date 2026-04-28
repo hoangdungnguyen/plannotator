@@ -2,6 +2,7 @@
 
 A plan review UI for Claude Code that intercepts `ExitPlanMode` via hooks, letting users approve or request changes with annotated feedback. Also provides code review for git diffs and annotation of arbitrary markdown files.
 
+$$ r_4$$
 ## Project Structure
 
 ```
